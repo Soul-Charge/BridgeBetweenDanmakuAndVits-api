@@ -1,0 +1,2 @@
+# BridgeBetweenDanmakuAndVits-api
+一个把B站弹幕姬的tts插件的请求转换后再发送给Vits-api的东西
