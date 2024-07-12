@@ -18,5 +18,41 @@
     "喵": {
         "value": "喵~",
         "caseSensitive": false
+    },
+    "妙": {
+        "value": "妙啊",
+        "caseSensitive": false
+    },
+    "dog": {
+        "value": "狗头",
+        "caseSensitive": false
+    },
+    "鬼魂": {
+        "value": "鬼魂~",
+        "caseSensitive": false
+    },
+    "UP": {
+        "value": "阿普",
+        "caseSensitive": false
+    },
+    "^wc$": {
+        "value": "卧槽",
+        "caseSensitive": false
+    },
+    "arcaea": {
+        "value": "ああけああ",
+        "caseSensitive": false
+    },
+    "bug": {
+        "value": "爸葛",
+        "caseSensitive": false
+    },
+    "far": {
+        "value": "发",
+        "caseSensitive": false
+    },
+    "sb616": {
+        "value": "傻逼六一六",
+        "caseSensitive": false
     }
 }
