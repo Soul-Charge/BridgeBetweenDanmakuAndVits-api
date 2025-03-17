@@ -32,9 +32,15 @@ const server = http.createServer((serverReq, res) => {
   if (RecUrl.url != serverReq.url || (Date.now() - RecUrl.time > 1000)) {
     RecUrl.url = serverReq.url;
     RecUrl.time = Date.now();
+    console.log("原始请求数据:", RecUrl.url);
 
     var ttsText = url.parse(RecUrl.url, true).query.text;
+    var ttsId = url.parse(RecUrl.url, true).query.id;
+    console.log("当前ttsId:", ttsId);
     console.log("接收到tts文本:", ttsText);
+
+    // 获取tts文本中名字对应的id
+    ttsId = returnIdByName(ttsText);
 
     // 对原始tts文本进行处理
     // 使用字典替换文本
@@ -51,9 +57,10 @@ const server = http.createServer((serverReq, res) => {
     const options = {
       hostname: config.requestHost,
       port: config.requestPort,
-      path: '/voice/vits?id=0&format=mp3&lang=mix&text=' + encodeURIComponent(ChangedttsText),
+      path: '/voice/vits?id=' + ttsId + '&format=mp3&lang=mix&text=' + encodeURIComponent(ChangedttsText),
       method: 'GET'
     };
+    console.log("请求数据path:", options.path);
 
     audioQueue.push(options);
     processQueue();
@@ -194,5 +201,17 @@ function checkText(str) {
     return "";
   } else {
     return str;
+  }
+}
+
+// 获取tts文本中的名字然后返回对应的id，参照映射表:IDNameMap.json
+function returnIdByName(ttsText) {
+  try {
+    const name = ttsText.match(/^\s*'?([\w\u4e00-\u9fa5-]+)\s+说:/)?.[1];
+    const map = JSON.parse(fs.readFileSync('./IDNameMap.json', 'utf8'));
+    return map[name]?.id ?? null ?? "0";
+  } catch (error) {
+    console.error('Error reading or parsing IDNameMap.json:', error);
+    return null;
   }
 }
