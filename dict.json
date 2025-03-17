@@ -54,5 +54,29 @@
     "sb616": {
         "value": "傻逼六一六",
         "caseSensitive": false
+    },
+    "0721": {
+        "value": "零七二一",
+        "caseSensitive": false
+    },
+    "steam": {
+        "value": "思题目",
+        "caseSensitive": false
+    },
+    "zako": {
+        "value": "咋口",
+        "caseSensitive": false
+    },
+    "杂鱼": {
+        "value": "咋口",
+        "caseSensitive": false
+    },
+    "ren汽": {
+        "value": "sbrobotgetfuukout",
+        "caseSensitive": false
+    },
+    "人汽": {
+        "value": "sbrobotgetfuukout",
+        "caseSensitive": false
     }
 }

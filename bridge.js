@@ -34,8 +34,19 @@ const server = http.createServer((serverReq, res) => {
     RecUrl.time = Date.now();
 
     var ttsText = url.parse(RecUrl.url, true).query.text;
-    ttsText = replaceWithdict(ttsText);
-    var ChangedttsText = addLanguageTags(ttsText);
+    console.log("接收到tts文本:", ttsText);
+
+    // 对原始tts文本进行处理
+    // 使用字典替换文本
+    var ChangedttsText = replaceWithdict(ttsText);
+    console.log("替换后文本:", ChangedttsText);
+    // 添加语言标记
+    ChangedttsText = addLanguageTags(ChangedttsText);
+    console.log("添加语言标记后文本:", ChangedttsText);
+    // 使用检查函数检查文本，如果含有不符合内容则清空字符串
+    // 对于人气机器人依赖于字典替换标记，再由此函数检查
+    ChangedttsText = checkText(ChangedttsText);
+    console.log("检查后文本:", ChangedttsText);
 
     const options = {
       hostname: config.requestHost,
@@ -172,4 +183,16 @@ function replaceWithdict(str) {
   });
 
   return replaced;
+}
+
+function checkText(str) {
+  // 如果名字包含超长数字（煞笔机器人）则清空字符串，连续数字长度为大于15
+  const numberPattern = /[0-9]{15,}/;
+  const robotPattern = /\bsbrobotgetfuukout\b/i; // 匹配机器人识别单词
+
+  if (numberPattern.test(str) || robotPattern.test(str)) {
+    return "";
+  } else {
+    return str;
+  }
 }

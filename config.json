@@ -2,6 +2,6 @@
   "__COMMENT__": "开启服务的端口，通常不用改",
   "serverPort": 3000,
   "__COMMENT__": "运行vits模型的设备的地址",
-  "requestHost": "192.168.10.9",
+  "requestHost": "192.168.1.9",
   "requestPort": 23456
 }

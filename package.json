@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "qrcode": "^1.5.4",
+    "speaker": "^0.5.5"
+  }
+}
