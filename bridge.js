@@ -125,44 +125,57 @@ function processQueue() {
 }
 
 function addLanguageTags(text) {
-  var chinesePattern = /[\u4E00-\u9FA5a-zA-Z]/;
+  var chinesePattern = /[\u4E00-\u9FA5a-zA-Z0-9]/; // 合并数字和字母到中文模式
   var japanesePattern = /[\u3040-\u309F\u30A0-\u30FF\u31F0-\u31FF]/;
-  var numberPattern = /[0-9]/;
 
   var result = "";
   var currentLanguage = null;
 
   for (var i = 0; i < text.length; i++) {
     var char = text[i];
+    var nextChar = text[i + 1];
 
-    if (chinesePattern.test(char) || numberPattern.test(char)) {
+    // 判断字符类型
+    const isChinese = chinesePattern.test(char);
+    const isJapanese = japanesePattern.test(char);
+
+    // 处理语言切换
+    if (isChinese) {
       if (currentLanguage !== "ZH") {
+        if (currentLanguage !== null) result += `[${currentLanguage}]`; // 关闭前标签
         result += "[ZH]";
         currentLanguage = "ZH";
       }
-    } else if (japanesePattern.test(char)) {
+    } else if (isJapanese) {
       if (currentLanguage !== "JA") {
+        if (currentLanguage !== null) result += `[${currentLanguage}]`; // 关闭前标签
         result += "[JA]";
         currentLanguage = "JA";
       }
     } else {
-      currentLanguage = null;
+      // 符号/空格保持当前语言状态，不关闭标签
     }
 
     result += char;
 
-    var nextChar = text[i + 1];
-    if ((currentLanguage === "ZH" && (!chinesePattern.test(nextChar) && !numberPattern.test(nextChar))) ||
-        (currentLanguage === "JA" && !japanesePattern.test(nextChar))) {
-      result += "[" + currentLanguage + "]";
-      currentLanguage = null;
+    // 预判下一个字符决定是否关闭标签
+    if (nextChar !== undefined) {
+      const nextIsChinese = chinesePattern.test(nextChar);
+      const nextIsJapanese = japanesePattern.test(nextChar);
+
+      if (currentLanguage === "ZH" && nextIsJapanese) {
+        result += "[ZH]";
+        currentLanguage = null;
+      } else if (currentLanguage === "JA" && nextIsChinese) {
+        result += "[JA]";
+        currentLanguage = null;
+      }
     }
   }
 
-  if (currentLanguage === "ZH") {
-    result += "[ZH]";
-  } else if (currentLanguage === "JA") {
-    result += "[JA]";
+  // 关闭末尾标签
+  if (currentLanguage) {
+    result += `[${currentLanguage}]`;
   }
 
   return result;
@@ -209,7 +222,7 @@ function returnIdByName(ttsText) {
   try {
     const name = ttsText.match(/^\s*'?([\w\u4e00-\u9fa5-]+)\s+说:/)?.[1];
     const map = JSON.parse(fs.readFileSync('./IDNameMap.json', 'utf8'));
-    return map[name]?.id ?? null ?? "0";
+    return map[name]?.id ?? null ?? "2894";
   } catch (error) {
     console.error('Error reading or parsing IDNameMap.json:', error);
     return null;
